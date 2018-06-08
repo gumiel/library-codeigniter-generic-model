@@ -16,8 +16,16 @@ class My_model extends CI_Model
  */
 class Generic extends My_model
 {
+
 	public $nameClass;
 	public $nameTable;
+	
+	// Estes son los configuradores para el primary key de la tabla como por Ejemplo "id_user"
+	private $positionStart     = 'id'; // Puede ser ( id, i, identificaro, vacio o cualquier nombre )
+	private $positionSeparator = '_'; // Puede ser ( , - . vacio o cualquier caracter ) 
+	private $positionEnd       = 'nameTable'; // Puede ser ( nameTable ó vacio ) 
+											  //Si es nameTable tomara el nombre de la tabla por defecto 
+											  //Si es vacio ya no tomara 
 	
 	public function construct()
 	{
@@ -52,24 +60,9 @@ class Generic extends My_model
 		$this->nameTable = $this->getNameTable();
 		$res = $this->db->insert($this->nameTable, $data);
 
-		if( $this->config->item('auditor_insert') )
-		{
-			$id         = $this->config->item('sessions_id');
-			$session_id = ( $this->ci->session->has_userdata($id) )? $this->session->userdata($id): 0;
-			
-			$query = $this->db->last_query();
-			
-			$this->db->insert('auditor_query', [ 
-													'class_controller'  =>$this->router->fetch_class(), 
-													'method_controller' =>$this->router->fetch_method(),
-													'class_model'       =>__CLASS__,
-													'method_model'      =>__METHOD__,
-													'query'             =>$query,
-													'execution_date'    =>date('Y-m-d H:i:s'),
-													'user'				=>$session_id
-												]
-							);
-		}
+		/////////////////////////////////////////////////////////////////////////////////
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE //
+		/////////////////////////////////////////////////////////////////////////////////
 
 		return $res;
 	}
@@ -85,24 +78,9 @@ class Generic extends My_model
 		$this->db->where( $array );
 		$this->db->update($nameTable, $data);
 
-		if( $this->config->item('auditor_update') )
-		{
-			$id         = $this->config->item('sessions_id');
-			$session_id = ( $this->ci->session->has_userdata($id) )? $this->session->userdata($id): 0;
-			
-			$query = $this->db->last_query();
-			
-			$this->db->insert('auditor_query', [ 
-													'class_controller'  =>$this->router->fetch_class(), 
-													'method_controller' =>$this->router->fetch_method(),
-													'class_model'       =>__CLASS__,
-													'method_model'      =>__METHOD__,
-													'query'             =>$query,
-													'execution_date'    =>date('Y-m-d H:i:s'),
-													'user'				=>$session_id
-												]
-							);
-		}
+
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 
+
 		
 	}
 
@@ -117,24 +95,9 @@ class Generic extends My_model
 		$this->db->where('id_'.$this->nameTable, $id);
 		$this->db->update($nameTable, $data);
 
-		if( $this->config->item('auditor_update') )
-		{
-			$id         = $this->config->item('sessions_id');
-			$session_id = ( $this->ci->session->has_userdata($id) )? $this->session->userdata($id): 0;
-			
-			$query = $this->db->last_query();
-			
-			$this->db->insert('auditor_query', [ 
-													'class_controller'  =>$this->router->fetch_class(), 
-													'method_controller' =>$this->router->fetch_method(),
-													'class_model'       =>__CLASS__,
-													'method_model'      =>__METHOD__,
-													'query'             =>$query,
-													'execution_date'    =>date('Y-m-d H:i:s'),
-													'user'				=>$session_id
-												]
-							);
-		}
+
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE //
+
 		
 	}
 
@@ -148,24 +111,9 @@ class Generic extends My_model
 		$this->db->where('id_'.$this->nameTable, $id);	
 		$this->db->delete($nameTable);
 
-		if( $this->config->item('auditor_delete') )
-		{
-			$id         = $this->config->item('sessions_id');
-			$session_id = ( $this->ci->session->has_userdata($id) )? $this->session->userdata($id): 0;
-			
-			$query = $this->db->last_query();
-			
-			$this->db->insert('auditor_query', [ 
-													'class_controller'  =>$this->router->fetch_class(), 
-													'method_controller' =>$this->router->fetch_method(),
-													'class_model'       =>__CLASS__,
-													'method_model'      =>__METHOD__,
-													'query'             =>$query,
-													'execution_date'    =>date('Y-m-d H:i:s'),
-													'user'				=>$session_id
-												]
-							);
-		}
+
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE //
+
 
 	}
 
@@ -179,24 +127,9 @@ class Generic extends My_model
 		$this->db->where('id_'.$this->nameTable, $id);	
 		$this->db->delete($nameTable);
 
-		if( $this->config->item('auditor_delete') )
-		{
-			$id         = $this->config->item('sessions_id');
-			$session_id = ( $this->ci->session->has_userdata($id) )? $this->session->userdata($id): 0;
-			
-			$query = $this->db->last_query();
-			
-			$this->db->insert('auditor_query', [ 
-													'class_controller'  =>$this->router->fetch_class(), 
-													'method_controller' =>$this->router->fetch_method(),
-													'class_model'       =>__CLASS__,
-													'method_model'      =>__METHOD__,
-													'query'             =>$query,
-													'execution_date'    =>date('Y-m-d H:i:s'),
-													'user'				=>$session_id
-												]
-							);
-		}
+
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE //
+
 
 	}
 
@@ -273,4 +206,13 @@ class Generic extends My_model
 	{
 		return strtolower(str_replace("_model","", $nameModel));
 	}
+
+	private function nameIdentificatorTable( )
+	{
+		$positionStart     = ( $this->positionStart=='nameTable' )? $this->nameTable: $this->positionStart;
+		$positionSeparator = ( $this->positionSeparator=='nameTable' )? $this->nameTable: $this->positionSeparator;
+		$positionEnd       = ( $this->positionEnd=='nameTable' )? $this->nameTable: $this->positionEnd;
+		return $positionStart.$positionSeparator.$positionEnd;
+	}
+
 }
