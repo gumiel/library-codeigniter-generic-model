@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+// Cambiar la extencion de CI_Model por Generic
 class User_model extends Generic {
 
 	public function __construct()
