@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+\$this->${1:table}_model->updateById( ${2:[array_asoc_set]}, ${3:id_table} );
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>generic_updateById</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.php</scope>
+</snippet>
