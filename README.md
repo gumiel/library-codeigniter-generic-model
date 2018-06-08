@@ -1,2 +1,2 @@
 # library-codeigniter-generic-model
-Libreria Generic Model para CodeIgniter
+Esta es una libreria para poder usar de forma generica la interaccion con la base de datos.
