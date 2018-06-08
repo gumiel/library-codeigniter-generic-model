@@ -70,9 +70,7 @@ class Generic extends My_model
 		$this->nameTable = $this->getNameTable();
 		$res = $this->db->insert($this->nameTable, $data);
 
-		
 		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'//
-		
 
 		return $res;
 	}
@@ -91,9 +89,7 @@ class Generic extends My_model
 		$this->db->where( $array );
 		$this->db->update($nameTable, $data);
 
-
-		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'
-
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'//
 		
 	}
 
@@ -111,9 +107,7 @@ class Generic extends My_model
 		$this->db->where('id_'.$this->nameTable, $id);
 		$this->db->update($nameTable, $data);
 
-
 		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'//
-
 		
 	}
 
@@ -130,9 +124,7 @@ class Generic extends My_model
 		$this->db->where('id_'.$this->nameTable, $id);	
 		$this->db->delete($nameTable);
 
-
 		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'//
-
 
 	}
 
@@ -149,9 +141,7 @@ class Generic extends My_model
 		$this->db->where('id_'.$this->nameTable, $id);	
 		$this->db->delete($nameTable);
 
-
-		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'//
-
+		// Aqui estaria el codigo para la implementacion del proyecto CODEIGNITER BASE 'https://github.com/gumiel/codeigniter'
 
 	}
 
@@ -257,4 +247,23 @@ class Generic extends My_model
 		return $positionStart.$positionSeparator.$positionEnd;
 	}
 
+
+
+	private function auditorAction()
+	{
+		$id         = $this->config->item('sessions_id');
+		$session_id = ( $this->ci->session->has_userdata($id) )? $this->session->userdata($id): 0;
+		$query      = $this->db->last_query();
+		
+		$this->db->insert('auditor_query', [ 
+												'class_controller'  =>$this->router->fetch_class(), 
+												'method_controller' =>$this->router->fetch_method(),
+												'class_model'       =>__CLASS__,
+												'method_model'      =>__METHOD__,
+												'query'             =>$query,
+												'execution_date'    =>date('Y-m-d H:i:s'),
+												'user'				=>$session_id
+											]
+						);
+	}
 }
