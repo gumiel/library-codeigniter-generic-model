@@ -199,29 +199,23 @@ class Generic extends My_model
 
 
 	/**
-	 * Devuelve todos los registros de la tabla
-	 * 
-	 * @return array Es un arreglo normal con todos los registros encontrados
-	 */
-	public function getAll()
-	{
-		$this->nameTable = $this->getNameTable();
-		return $this->db->get($this->nameTable)->result_array();
-	}
-
-
-
-	/**
-	 * Devuelve todos los registros seleccionados de la tabla
+	 * Devuelve todos los registros seleccionados de la tabla y si esta vacio revolvera todos los registros de la tabla
 	 * 
 	 * @param  array_asoc  $array Son todos los datos en arreglo asociativo que se buscaran
 	 * @return array         Es un arreglo normal con todos los registros encontrados
 	 */
-	public function getAllBy( $array=array() )
+	public function getAll( $array=array() )
 	{
-		$this->nameTable = $this->getNameTable();
-		$this->db->where($array);
-		return $this->db->get($this->nameTable)->result_array();	
+		if ( sizeof($array)>0 )
+		{
+			$this->nameTable = $this->getNameTable();
+			$this->db->where($array);
+			return $this->db->get($this->nameTable)->result_array();	
+		} else
+		{
+			$this->nameTable = $this->getNameTable();
+			return $this->db->get($this->nameTable)->result_array();
+		}
 	}
 
 

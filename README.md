@@ -15,6 +15,15 @@ $user = $this->user_modal->getById(1554);
 // devolvera $user->name ,$user->last_name ,$user->email
 ```
 
+Para poder obtener un fila del registro de datos por un arreglo asociativo de datos que coincidan (WHERE)<br>
+```
+$users = $this->user_modal->getAll( );
+// ó
+$users = $this->user_modal->getAll( [ 'name'=>'henry', 'last_name'=>'perez', 'email'=>'prez.gumiel@gmail.com' ] );
+// devolvera $users[0]['name'] ,$users[0]['last_name'] ,$users[0]['email'] , 
+//           $users[1]['name'] ,$users[1]['last_name'] ,$users[1]['email'] 
+```
+
 Para poder crear un registro de datos<br>
 ```
 $id_user = $this->user_modal->insert( [ 'name'=>'henry', 'last_name'=>'perez', 'email'=>'prez.gumiel@gmail.com' ] );
