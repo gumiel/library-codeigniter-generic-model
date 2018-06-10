@@ -9,7 +9,8 @@ class Usuario extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		
+	
+		//$this->load->database();
 		$this->load->model('usuario_model');
 
 	}
@@ -17,7 +18,7 @@ class Usuario extends CI_Controller {
 	public function index()
 	{
 		$data = array();		
-		$data["usuarios"] = $this->usuario_model->listUsuario();
+		$data["usuarios"] = $this->usuario_model->getAll();
 		$this->load->view('usuario/index', $data);
 	}
 
