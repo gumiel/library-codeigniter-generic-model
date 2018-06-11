@@ -24,6 +24,7 @@ class Usuario extends CI_Controller {
 
 	public function createUsuario()
 	{
+
 		$usuario = $this->input->post("usuario");
 
 		$this->form_validation->set_rules($this->usuario_rule->apply());
@@ -83,42 +84,6 @@ class Usuario extends CI_Controller {
 
 	}
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public function getUsuarioAjax()
-	{
-		$data = array();
-
-		$usuario = $this->input->post("usuario");
-		$data["usuario"] = $this->usuario_model->getById($usuario["id_usuario"]);  
-
-		$this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
-        ->_display();
-		exit;
-	}
-
 	public function deleteUsuarioAjax()
 	{
 		$usuario = $this->input->post("usuario");
@@ -129,14 +94,13 @@ class Usuario extends CI_Controller {
 		if ( $this->form_validation->run() )
 		{
 			$this->usuario_model->deleteById($usuario["id_usuario"]);
-			$data["result"] = 1;
+			$this->session->set_flashdata('message', [ "success"=>"Se elimino el registro" ]);
 		} else
 		{
-			$data["result"] = 0;
-			$data["msg"] = validation_errors();
+			$this->session->set_flashdata('message', [ "error"=>validation_errors() ]);
 		}
 		
-		$this->utils->json($data);
+		redirect('usuario/lista','refresh');
 	}
 
 
