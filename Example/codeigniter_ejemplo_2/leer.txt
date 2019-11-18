@@ -1,0 +1,1 @@
+Este sera un ejemplo cuando las llaves primarias tengan el nombre de la tabla_id el nombre de esa forma
