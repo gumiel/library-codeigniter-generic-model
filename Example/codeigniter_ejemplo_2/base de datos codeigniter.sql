@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-11-2019 a las 21:46:28
+-- Tiempo de generación: 19-11-2019 a las 16:13:21
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.3.9
 
@@ -37,6 +37,27 @@ CREATE TABLE `persona` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `user`
+--
+
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL,
+  `login` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `user`
+--
+
+INSERT INTO `user` (`user_id`, `login`, `password`) VALUES
+(1, 'henryx', '123456'),
+(2, 'nexos', '789456'),
+(4, 'nexos', '789456');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuario`
 --
 
@@ -52,9 +73,9 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id_usuario`, `login`, `password`) VALUES
 (1, 'aldo', 'asdas'),
-(2, 'pirat33', '1234'),
-(3, 'nexos', '122233445566778899'),
-(5, 'nexos', '123777777777');
+(2, 'hperez', '1234'),
+(3, 'henryx', '122233445566778899'),
+(5, 'henryx', '123777777777');
 
 --
 -- Índices para tablas volcadas
@@ -65,6 +86,12 @@ INSERT INTO `usuario` (`id_usuario`, `login`, `password`) VALUES
 --
 ALTER TABLE `persona`
   ADD PRIMARY KEY (`persona_id`);
+
+--
+-- Indices de la tabla `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- Indices de la tabla `usuario`
@@ -81,6 +108,12 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `persona`
   MODIFY `persona_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `user`
+--
+ALTER TABLE `user`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
