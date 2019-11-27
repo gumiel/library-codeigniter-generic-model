@@ -4,7 +4,7 @@
 class My_model extends CI_Model
 {
  	public function construct(){
-		parent::__construct();
+		parent::__construct();				
  	}
 }
 
@@ -22,18 +22,19 @@ class Generic extends My_model
 	public $nameTable;
 	
 	// Estes son los configuradores para el primary key de la tabla como por Ejemplo "id_user"
-	private $positionStart     = 'id'; // Puede ser ( id, i, identificaro, vacio o cualquier nombre )
-	private $positionSeparator = '_'; // Puede ser ( , - . vacio o cualquier caracter ) 
-	private $positionEnd       = 'nameTable'; // Puede ser ( nameTable ó vacio ) 
+	private $positionStart     = ''; // Puede ser ( id, i, identificaro, vacio o cualquier nombre )
+	private $positionSeparator = ''; // Puede ser ( , - . vacio o cualquier caracter ) 
+	private $positionEnd       = ''; // Puede ser ( nameTable ó vacio ) 
 											  //Si es nameTable tomara el nombre de la tabla por defecto 
 											  //Si es vacio ya no tomara 
+	private $typeResult; // Es el tipo de resultado que podria devolvernos
 	
 	public function construct()
 	{
-		parent::__construct();
+		parent::__construct();	
 	}
 
-
+	
 
 	/**
 	 * Devuelve el nombre de la clase model
@@ -100,7 +101,7 @@ class Generic extends My_model
 	public function updateById($data, $id)
 	{
 		$this->nameTable = $this->getNameTable();
-		$this->db->where('id_'.$this->nameTable, $id);
+		$this->db->where($this->nameIdentificatorTable(), $id);
 		$this->db->update( $this->nameTable, $data);
 		
 	}
@@ -130,7 +131,7 @@ class Generic extends My_model
 	public function deleteById($id)
 	{
 		$this->nameTable = $this->getNameTable();
-		$this->db->where('id_'.$this->nameTable, $id);	
+		$this->db->where($this->nameIdentificatorTable(), $id);	
 		$this->db->delete($this->nameTable);
 
 	}
@@ -143,12 +144,18 @@ class Generic extends My_model
 	 * @param  integer $id Identificador de la tabla para la busqueda
 	 * @return array_asoc  $array   El resultado a la busqueda de registros en la base de datos
 	 */
-	public function getById($id)
+	public function getById($id, $tipo = null)
 	{
+		$this->obtenerDatosDeConfiguracion();
+
+		if($tipo == null){
+			$tipo = $this->typeResult;			
+		}
+
 		$this->nameTable = $this->getNameTable();
-		$this->db->where('id_'.$this->nameTable, $id);
+		$this->db->where($this->nameIdentificatorTable(), $id);
 		$res = $this->db->get($this->nameTable);
-		return $res->row();
+		return ($tipo == 'array')? $res->row(): $res->row_array();
 	}
 
 
@@ -159,12 +166,18 @@ class Generic extends My_model
 	 * @param  array  $array Es un arreglo asociativo que se envia para poder seleccionar un registro
 	 * @return array_asoc  $array  El resultado a la busqueda de registros en la base de datos
 	 */
-	public function get($array=array())
+	public function get($array=array(), $tipo = null)
 	{
+		$this->obtenerDatosDeConfiguracion();
+
+		if($tipo == null){
+			$tipo = $this->typeResult;			
+		}
+		
 		$this->nameTable = $this->getNameTable();
 		$this->db->where($array);
 		$res = $this->db->get($this->nameTable);
-		return $res->row();
+		return ($tipo == 'array')? $res->row(): $res->row_array();
 	}
 
 
@@ -175,8 +188,13 @@ class Generic extends My_model
 	 * @param  array_asoc  $array Es un arreglo asociativo de todos los datos que seran usados para la busqueda de registros
 	 * @return integer        Es la cantidad de registros encontrados
 	 */
-	public function count($array=array())
+	public function count($array=array(), $tipo = null)
 	{
+		$this->obtenerDatosDeConfiguracion();
+
+		if($tipo == null){
+			$tipo = $this->typeResult;			
+		}
 
 		$this->nameTable = $this->getNameTable();
 
@@ -188,7 +206,7 @@ class Generic extends My_model
 		
 		$res = $this->db->get($this->nameTable);	
 
-		return $res->row()->c;	
+		return ($tipo == 'array')? $res->row_array()->c: $res->row()->c;	
 
 	}
 
@@ -200,19 +218,31 @@ class Generic extends My_model
 	 * @param  array_asoc  $array Son todos los datos en arreglo asociativo que se buscaran
 	 * @return array         Es un arreglo normal con todos los registros encontrados
 	 */
-	public function getAll( $array=array() )
+	public function getAll( $array=array() , $tipo = null)
 	{
+		$this->obtenerDatosDeConfiguracion();
+
+		if($tipo == null){
+			$tipo = $this->typeResult;			
+		}
+
+		$result = null;
 		if ( sizeof($array)>0 )
 		{
 			$this->nameTable = $this->getNameTable();
 			$this->db->where($array);
-			return $this->db->get($this->nameTable)->result_array();	
+						
+			$result = ($tipo=='array')? $this->db->get($this->nameTable)->result_array(): $this->db->get($this->nameTable)->result();	
+			
 		} else
 		{
 			$this->nameTable = $this->getNameTable();
-			return $this->db->get($this->nameTable)->result_array();
+			
+			$result = ($tipo=='array')? $this->db->get($this->nameTable)->result_array(): $this->db->get($this->nameTable)->result();
+			
 		}
 
+		return $result;
 	}
 
 
@@ -232,10 +262,25 @@ class Generic extends My_model
 
 	private function nameIdentificatorTable()
 	{
+
+		$this->obtenerDatosDeConfiguracion();
+
 		$positionStart     = ( $this->positionStart=='nameTable' )? $this->nameTable: $this->positionStart;
 		$positionSeparator = ( $this->positionSeparator=='nameTable' )? $this->nameTable: $this->positionSeparator;
 		$positionEnd       = ( $this->positionEnd=='nameTable' )? $this->nameTable: $this->positionEnd;
+		
 		return $positionStart.$positionSeparator.$positionEnd;
+	}
+
+	private function obtenerDatosDeConfiguracion()
+	{
+		$this->config->load('config_generic_model');
+
+		$this->positionStart     = $this->config->item('gm_positionStart');
+		$this->positionSeparator = $this->config->item('gm_positionSeparator');
+		$this->positionEnd       = $this->config->item('gm_positionEnd');
+		$this->typeResult        = $this->config->item('gm_type_result');		
+
 	}
 
 
