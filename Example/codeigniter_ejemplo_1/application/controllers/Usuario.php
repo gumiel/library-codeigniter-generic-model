@@ -36,6 +36,20 @@ class Usuario extends CI_Controller {
 		$this->load->view('usuario/index', $data);
 	}
 
+	public function cambiandoTipoRespuesta($login='')
+	{
+		$data = array();		
+
+		if($login!='')
+		{
+			$data["usuarios"] = $this->usuario_model->getAll(['login'=>$login]);
+		}else{
+			$data["usuarios"] = $this->usuario_model->getAll(array(), 'array');
+		}
+
+		$this->load->view('usuario/index', $data);
+	}
+
 	/**
 	 * Obtiene los datos de un usuario segun su ID
 	 * Ejm: http://localhost/codeigniter/index.php/Usuario/obtenerUsuarioPorId/7

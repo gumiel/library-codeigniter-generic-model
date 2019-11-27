@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['gm_positionStart'] = 'nameTable'; 
 $config['gm_positionSeparator'] = '_';
 $config['gm_positionEnd'] = 'id';
-$config['gm_type_result'] = 'array'; // Puede ser object o array 
+$config['gm_type_result'] = 'object'; // Puede ser object o array 
 
 
 /* Este es un ejemplo de un primary key id_usuario */
